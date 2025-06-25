@@ -1,0 +1,185 @@
+[gd_scene load_steps=21 format=3 uid="uid://u4i7ihe4l1xl"]
+
+[ext_resource type="Script" uid="uid://b0wpowujg5for" path="res://dice_game.gd" id="1_a4m0k"]
+[ext_resource type="Texture2D" uid="uid://bthgvpdpsrk0b" path="res://assets/erasebg-transformed (4).png" id="2_onxbv"]
+[ext_resource type="Texture2D" uid="uid://bex4vmecnwn68" path="res://assets/icons8-cross-64.png" id="3_j8p6f"]
+[ext_resource type="AudioStream" uid="uid://d0ywow32cl0x1" path="res://audio/sfx/dice_roll.mp3" id="4_yqda1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_onxbv"]
+bg_color = Color(0.862745, 0.027451, 0.0666667, 0.796078)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vdsmb"]
+bg_color = Color(0.945098, 0.345098, 0, 0.658824)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cjklt"]
+bg_color = Color(0.945098, 0.345098, 0, 0.658824)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bfsj0"]
+bg_color = Color(0.945098, 0.345098, 0, 0.447059)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j8p6f"]
+bg_color = Color(0.72549, 0.745098, 0.113725, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.0846899, 0.0846899, 0.0846899, 0.6)
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ibi2q"]
+bg_color = Color(0.945098, 0.345098, 0, 0.658824)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_51wdj"]
+bg_color = Color(0.945098, 0.345098, 0, 0.658824)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uc315"]
+bg_color = Color(0.945098, 0.345098, 0, 0.407843)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yqda1"]
+bg_color = Color(0.72549, 0.745098, 0.113725, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.0745098, 0.0745098, 0.0745098, 0.52549)
+shadow_size = 2
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j8p6f"]
+atlas = ExtResource("2_onxbv")
+region = Rect2(0, 0, 1248, 1346)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yqda1"]
+atlas = ExtResource("2_onxbv")
+region = Rect2(1248, 0, 1248, 1346)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vdsmb"]
+atlas = ExtResource("2_onxbv")
+region = Rect2(2496, 0, 1248, 1346)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cjklt"]
+atlas = ExtResource("2_onxbv")
+region = Rect2(0, 1346, 1248, 1346)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bfsj0"]
+atlas = ExtResource("2_onxbv")
+region = Rect2(1248, 1346, 1248, 1346)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ibi2q"]
+atlas = ExtResource("2_onxbv")
+region = Rect2(2496, 1346, 1248, 1346)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_51wdj"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j8p6f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yqda1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vdsmb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cjklt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bfsj0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ibi2q")
+}],
+"loop": true,
+"name": &"roll",
+"speed": 10.0
+}]
+
+[node name="DiceGame" type="CanvasLayer"]
+script = ExtResource("1_a4m0k")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_onxbv")
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+offset_right = 453.0
+offset_bottom = 135.0
+theme_override_font_sizes/font_size = 25
+autowrap_mode = 2
+
+[node name="ButtonHigh" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 618.0
+offset_top = 120.0
+offset_right = 734.0
+offset_bottom = 160.0
+theme_override_colors/font_color = Color(0.00566115, 0.00566115, 0.00566115, 1)
+theme_override_styles/focus = SubResource("StyleBoxFlat_vdsmb")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_cjklt")
+theme_override_styles/hover = SubResource("StyleBoxFlat_bfsj0")
+theme_override_styles/normal = SubResource("StyleBoxFlat_j8p6f")
+text = "> 3"
+
+[node name="ButtonLow" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 423.0
+offset_top = 120.0
+offset_right = 540.0
+offset_bottom = 160.0
+theme_override_colors/font_color = Color(0.00566115, 0.00566115, 0.00566115, 1)
+theme_override_styles/focus = SubResource("StyleBoxFlat_ibi2q")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_51wdj")
+theme_override_styles/hover = SubResource("StyleBoxFlat_uc315")
+theme_override_styles/normal = SubResource("StyleBoxFlat_yqda1")
+text = "<= 3"
+
+[node name="DiceSprite" type="AnimatedSprite2D" parent="Panel"]
+position = Vector2(625, 318)
+scale = Vector2(0.2, 0.2)
+sprite_frames = SubResource("SpriteFrames_51wdj")
+animation = &"roll"
+frame_progress = 0.683746
+
+[node name="CloseButton" type="TextureButton" parent="Panel"]
+layout_mode = 0
+offset_left = 1025.0
+offset_top = 31.0
+offset_right = 1089.0
+offset_bottom = 95.0
+texture_normal = ExtResource("3_j8p6f")
+
+[node name="DiceSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_yqda1")
+volume_db = 17.829
+
+[connection signal="pressed" from="Panel/ButtonHigh" to="." method="_on_high_pressed"]
+[connection signal="pressed" from="Panel/ButtonLow" to="." method="_on_low_pressed"]

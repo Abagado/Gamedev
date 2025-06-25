@@ -1,0 +1,189 @@
+[gd_scene load_steps=25 format=3 uid="uid://t8hd2qssaixv"]
+
+[ext_resource type="Texture2D" uid="uid://dsbmxmjajtmjf" path="res://background/лес.png" id="1_n21kq"]
+[ext_resource type="Script" uid="uid://b0cfe8mxfmwhc" path="res://forest_scene.gd" id="1_osb58"]
+[ext_resource type="Texture2D" uid="uid://dk0m4g60k7kh" path="res://assets/лавка.png" id="2_bmfwk"]
+[ext_resource type="Texture2D" uid="uid://b1rambarxucv5" path="res://background/лес_передний план.png" id="3_bmfwk"]
+[ext_resource type="Script" uid="uid://jopfhpnie5ia" path="res://character/player.gd" id="4_dhb2d"]
+[ext_resource type="Texture2D" uid="uid://dlamqp2bl45kr" path="res://character/s1.png" id="5_osb58"]
+[ext_resource type="Texture2D" uid="uid://djk5hyupjgq4p" path="res://character/2.png" id="6_6i7rq"]
+[ext_resource type="Script" uid="uid://06167ucc2kbx" path="res://merchant_interaction.gd" id="6_pk06b"]
+[ext_resource type="Texture2D" uid="uid://d2qhjgup3ybnb" path="res://assets/icons8-вопросительный-знак-100.png" id="7_a8avv"]
+[ext_resource type="Texture2D" uid="uid://ca5tn1pkb6uo2" path="res://character/3.png" id="7_pk06b"]
+[ext_resource type="Texture2D" uid="uid://ddl8dwtul7ig8" path="res://character/4.png" id="8_a8avv"]
+[ext_resource type="Texture2D" uid="uid://dxrmbr2ymvcbm" path="res://character/5.png" id="9_cltsu"]
+[ext_resource type="Texture2D" uid="uid://nvu6pmgt55bp" path="res://character/6.png" id="10_rb16k"]
+[ext_resource type="Texture2D" uid="uid://2xgsuxxthgxr" path="res://character/7.png" id="11_psnpo"]
+[ext_resource type="Texture2D" uid="uid://kme2olkhtt7c" path="res://character/8.png" id="12_deq2c"]
+[ext_resource type="Texture2D" uid="uid://dso0laht7agfq" path="res://character/9.png" id="13_bhnij"]
+[ext_resource type="Texture2D" uid="uid://crmu7wwavdj1k" path="res://character/10.png" id="14_n6mqw"]
+[ext_resource type="Texture2D" uid="uid://e24a8k7bokx3" path="res://character/11.png" id="15_vgq2q"]
+[ext_resource type="Texture2D" uid="uid://rhbt4qiqu1i3" path="res://assets/Idle1.png" id="16_dhb2d"]
+[ext_resource type="Texture2D" uid="uid://b250po35bd7gx" path="res://assets/житель леса.png" id="20_6i7rq"]
+[ext_resource type="AudioStream" uid="uid://oo1kvgib24bg" path="res://audio/music/trader_music.mp3" id="21_pk06b"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_u52il"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_osb58")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_6i7rq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_pk06b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_a8avv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_cltsu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_rb16k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_psnpo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_deq2c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_bhnij")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_n6mqw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_vgq2q")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 15.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_osb58"]
+size = Vector2(181, 194)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cltsu"]
+size = Vector2(817, 554.5)
+
+[node name="ForestScene" type="Node2D"]
+script = ExtResource("1_osb58")
+
+[node name="player" type="CharacterBody2D" parent="."]
+z_index = 2
+z_as_relative = false
+position = Vector2(118, 547)
+script = ExtResource("4_dhb2d")
+speed = 200.0
+
+[node name="sprite" type="AnimatedSprite2D" parent="player"]
+z_index = 2
+z_as_relative = false
+scale = Vector2(0.3, 0.3)
+sprite_frames = SubResource("SpriteFrames_u52il")
+animation = &"walk"
+frame_progress = 0.016611
+
+[node name="Camera2D" type="Camera2D" parent="player"]
+z_as_relative = false
+position = Vector2(-118, -547)
+anchor_mode = 0
+limit_left = -100000
+limit_top = -100000
+limit_smoothed = true
+position_smoothing_enabled = true
+drag_horizontal_enabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player"]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_osb58")
+
+[node name="MerchantInteraction" type="Area2D" parent="."]
+z_as_relative = false
+input_pickable = false
+script = ExtResource("6_pk06b")
+
+[node name="InteractionZone" type="CollisionShape2D" parent="MerchantInteraction"]
+position = Vector2(1139.5, 376.25)
+shape = SubResource("RectangleShape2D_cltsu")
+
+[node name="QuestionMark" type="Sprite2D" parent="MerchantInteraction"]
+z_index = 100
+position = Vector2(850, 260)
+texture = ExtResource("7_a8avv")
+
+[node name="Background" type="ParallaxBackground" parent="."]
+follow_viewport_enabled = true
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="Background"]
+motion_scale = Vector2(0.5, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/ParallaxLayer"]
+z_as_relative = false
+position = Vector2(1360, 326)
+scale = Vector2(0.60463, 0.60463)
+texture = ExtResource("1_n21kq")
+
+[node name="Merchant" type="Area2D" parent="Background/ParallaxLayer"]
+z_as_relative = false
+position = Vector2(1138, 378)
+input_pickable = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/ParallaxLayer/Merchant"]
+z_as_relative = false
+position = Vector2(0, 1.52588e-05)
+scale = Vector2(0.489258, 0.489258)
+texture = ExtResource("16_dhb2d")
+flip_h = true
+
+[node name="Shop" type="Sprite2D" parent="Background/ParallaxLayer/Merchant"]
+z_as_relative = false
+y_sort_enabled = true
+position = Vector2(1.45519e-11, -59)
+scale = Vector2(0.716309, 0.716309)
+texture = ExtResource("2_bmfwk")
+
+[node name="ForestGuardian" type="Area2D" parent="Background/ParallaxLayer"]
+z_as_relative = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/ParallaxLayer/ForestGuardian"]
+position = Vector2(2419, 253)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("20_6i7rq")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Background/ParallaxLayer/ForestGuardian"]
+
+[node name="InteractionZone" type="CollisionShape2D" parent="Background/ParallaxLayer/ForestGuardian"]
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="Background"]
+process_mode = 3
+layer = 1
+follow_viewport_enabled = true
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="Background/ParallaxBackground"]
+z_as_relative = false
+motion_scale = Vector2(0.5, 0)
+
+[node name="Sprite2D3" type="Sprite2D" parent="Background/ParallaxBackground/ParallaxLayer2"]
+z_index = 100
+z_as_relative = false
+position = Vector2(1358, 324)
+scale = Vector2(0.607389, 0.607389)
+texture = ExtResource("3_bmfwk")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="MusicPlayer" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("21_pk06b")
+autoplay = true
+
+[connection signal="body_entered" from="MerchantInteraction" to="MerchantInteraction" method="_on_body_entered"]
+[connection signal="body_exited" from="MerchantInteraction" to="MerchantInteraction" method="_on_body_exited"]

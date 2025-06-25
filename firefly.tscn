@@ -1,0 +1,90 @@
+[gd_scene load_steps=9 format=3 uid="uid://mqq5ueyko3ub"]
+
+[ext_resource type="Texture2D" uid="uid://bckgddla536ww" path="res://assets/светлячок без отражения.png" id="1_ryrtv"]
+[ext_resource type="Shader" uid="uid://bku0sme28jwoh" path="res://firefly.gdshader" id="2_fc1d2"]
+
+[sub_resource type="GDScript" id="GDScript_fc1d2"]
+resource_name = "Firefly"
+script/source = "extends Area2D
+
+@export var is_correct: bool = false
+signal selected(correct: bool)
+
+func _ready():
+	$AnimationPlayer.play(\"float\")
+	# Включаем/выключаем отражение в зависимости от правильности
+	$Reflection.visible = not is_correct
+
+func _input_event(viewport, event, shape_idx):
+	if event is InputEventMouseButton and event.pressed:
+		emit_signal(\"selected\", is_correct)
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_elt3m"]
+shader = ExtResource("2_fc1d2")
+shader_parameter/wave_strength = 0.02
+shader_parameter/wave_speed = 2.0
+shader_parameter/transparency = 0.6
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_elt3m"]
+
+[sub_resource type="Animation" id="Animation_o7aac"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_qoos8"]
+resource_name = "float"
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 3)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_prqgs"]
+_data = {
+&"RESET": SubResource("Animation_o7aac"),
+&"float": SubResource("Animation_qoos8")
+}
+
+[node name="Firefly" type="Area2D"]
+script = SubResource("GDScript_fc1d2")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_ryrtv")
+
+[node name="Reflection" type="Sprite2D" parent="."]
+modulate = Color(0.423529, 0.537255, 1, 0.603922)
+material = SubResource("ShaderMaterial_elt3m")
+position = Vector2(2, 55)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_ryrtv")
+flip_v = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-3, -33)
+shape = SubResource("CircleShape2D_elt3m")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_prqgs")
+}

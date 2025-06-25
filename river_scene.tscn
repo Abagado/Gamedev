@@ -1,0 +1,270 @@
+[gd_scene load_steps=22 format=3 uid="uid://dyjodveoeov4"]
+
+[ext_resource type="Texture2D" uid="uid://c415fmuoj40w5" path="res://background/river.png" id="1_vrhi7"]
+[ext_resource type="Texture2D" uid="uid://bcbx4m5xw4egg" path="res://background/река_трава.png" id="2_byqlo"]
+[ext_resource type="Texture2D" uid="uid://dwcr7f5a3tlm6" path="res://assets/boat.png" id="2_fj23u"]
+[ext_resource type="Script" uid="uid://jopfhpnie5ia" path="res://character/player.gd" id="3_byqlo"]
+[ext_resource type="Texture2D" uid="uid://dlamqp2bl45kr" path="res://character/s1.png" id="4_6ulp1"]
+[ext_resource type="Texture2D" uid="uid://djk5hyupjgq4p" path="res://character/2.png" id="5_4s2mc"]
+[ext_resource type="Texture2D" uid="uid://ca5tn1pkb6uo2" path="res://character/3.png" id="6_bk736"]
+[ext_resource type="Texture2D" uid="uid://ddl8dwtul7ig8" path="res://character/4.png" id="7_4osm2"]
+[ext_resource type="Texture2D" uid="uid://dxrmbr2ymvcbm" path="res://character/5.png" id="8_rvx5f"]
+[ext_resource type="Texture2D" uid="uid://nvu6pmgt55bp" path="res://character/6.png" id="9_16fy0"]
+[ext_resource type="Texture2D" uid="uid://2xgsuxxthgxr" path="res://character/7.png" id="10_qtfhj"]
+[ext_resource type="Texture2D" uid="uid://kme2olkhtt7c" path="res://character/8.png" id="11_6bgcb"]
+[ext_resource type="Texture2D" uid="uid://dso0laht7agfq" path="res://character/9.png" id="12_l1a84"]
+[ext_resource type="Texture2D" uid="uid://crmu7wwavdj1k" path="res://character/10.png" id="13_un6ex"]
+[ext_resource type="Texture2D" uid="uid://e24a8k7bokx3" path="res://character/11.png" id="14_472e0"]
+[ext_resource type="AudioStream" uid="uid://d0s1fri6wc8x7" path="res://audio/music/river_music.wav" id="16_6ulp1"]
+[ext_resource type="AudioStream" uid="uid://cqgfso0ayiq3i" path="res://audio/sfx/river_sound.wav" id="17_4s2mc"]
+[ext_resource type="AudioStream" uid="uid://dwk6vj5msymba" path="res://audio/sfx/birds.wav" id="18_bk736"]
+
+[sub_resource type="GDScript" id="GDScript_byqlo"]
+resource_name = "Boat"
+script/source = "extends Node2D
+
+@export var speed: float = 150.0
+var target_position: Vector2
+var moving := false
+var stop_position_x := 1480  # Зададим позже
+var transition_scene = preload(\"res://transition.tscn\") # Предзагрузка сцены перехода
+# Добавляем проверку на активный переход
+var is_transitioning := false
+
+signal reached_position
+
+func _ready():
+	$Camera2D.make_current()  # Включает камеру
+
+func move_to_position(pos: Vector2):
+	target_position = Vector2(pos.x, position.y)  # только по X
+	moving = true
+	$Camera2D.make_current()
+
+func _process(delta):
+	
+	if moving:
+		var direction = (target_position - position).normalized()
+		position += direction * speed * delta
+		if position.distance_to(target_position) < 5:
+			position = target_position
+			moving = false
+			emit_signal(\"reached_position\")
+	if position.x >= stop_position_x:
+		moving = false
+		start_transition() # Вызываем переход при достижении конечной точки
+		
+func start_transition():
+	if is_transitioning:
+		return
+	
+	is_transitioning = true
+	print(\"Transition STARTED\")
+	
+	var transition = transition_scene.instantiate()
+	get_tree().root.add_child(transition)
+	
+	# Убедимся, что нода добавлена в дерево
+	await get_tree().process_frame
+	
+	# Проверка видимости (добавьте в transition.gd)
+	print(\"Transition visible: \", transition.visible)
+	print(\"ColorRect visible: \", transition.get_node(\"ColorRect\").visible)
+	
+	await transition.fade_in()
+	print(\"Fade-in COMPLETED\")
+	
+	get_tree().change_scene_to_file(\"res://forest_scene.tscn\")
+	transition.queue_free()
+		
+		
+"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4e2as"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_6ulp1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_4s2mc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_bk736")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_4osm2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_rvx5f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_16fy0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_qtfhj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_6bgcb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_l1a84")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_un6ex")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_472e0")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 15.0
+}]
+
+[sub_resource type="GDScript" id="GDScript_16fy0"]
+resource_name = "FireflyManager"
+script/source = "extends Node2D
+
+@export var background_limit_x := 5000  # конец фона
+@export var end_margin := 1000           # отступ перед краем
+@export var wave_offset: float = 200.0
+@export var boat_path := NodePath(\"../Boat\") # путь к лодке
+
+var current_wave := 0
+var waves := []  # Здесь можно будет задать координаты волн
+
+func _ready():
+	waves = [
+	[Vector2(400, 500), Vector2(500, 520), Vector2(600, 510)], # волна 1
+	[Vector2(1000, 500), Vector2(1100, 510), Vector2(1200, 495)], # волна 2
+	[Vector2(1600, 510), Vector2(1700, 530), Vector2(1800, 500)], # волна 3
+	[Vector2(2200, 510), Vector2(2300, 525), Vector2(2400, 495)], # волна 4
+	[Vector2(2800, 510), Vector2(2900, 525), Vector2(3000, 495)], # волна 4
+]
+	spawn_wave()
+
+func spawn_wave():
+	clear_fireflies()
+	var positions = waves[current_wave]
+	var correct_index = randi() % positions.size()
+
+	for i in positions.size():
+		var firefly = preload(\"res://Firefly.tscn\").instantiate()
+		firefly.position = positions[i]
+		firefly.is_correct = (i == correct_index)
+		firefly.selected.connect(on_firefly_selected)
+		add_child(firefly)
+
+func clear_fireflies():
+	for child in get_children():
+		if child is Area2D:
+			child.queue_free()
+			
+func get_wave_min_x(wave: Array) -> float:
+	var min_x = wave[0].x
+	for pos in wave:
+		if pos.x < min_x:
+			min_x = pos.x
+	return min_x
+	
+func on_firefly_selected(correct):
+	var boat = get_node_or_null(boat_path)
+	if boat == null:
+		print(\" Не удалось найти лодку по пути: \", boat_path)
+		return
+
+	clear_fireflies()  # сразу убрать текущую волну
+
+	if correct:
+		current_wave += 1
+
+		if current_wave < waves.size():
+			
+			var next_wave = waves[current_wave]
+			var min_x = get_wave_min_x(next_wave)
+			# Предполагаем, что лодка должна остановиться за 300 пикселей до волны
+			var safe_offset = 800.0  # подбери под свои размеры
+			var target_x = min_x - safe_offset
+			if target_x < background_limit_x - end_margin:
+				boat.move_to_position(Vector2(target_x, boat.position.y))
+				boat.reached_position.connect(spawn_wave, CONNECT_ONE_SHOT)
+			else:
+				print(\"Мини-игра завершена — достигнут конец фона\")
+	else:
+		current_wave = 0
+		if boat == null:
+			print(\"Лодка не найдена!\")
+			return
+
+		boat.global_position = Vector2(200, boat.global_position.y)
+		spawn_wave()
+"
+
+[node name="RiverScene" type="Node2D"]
+position = Vector2(578, 334)
+
+[node name="Background" type="Node2D" parent="."]
+position = Vector2(-579, -335)
+
+[node name="Sprite2D" type="Sprite2D" parent="Background"]
+z_as_relative = false
+position = Vector2(1.90735e-06, 1.42109e-14)
+scale = Vector2(0.605556, 0.605556)
+texture = ExtResource("1_vrhi7")
+centered = false
+
+[node name="РекаТрава" type="Sprite2D" parent="Background"]
+z_index = 10
+position = Vector2(1539, 580)
+scale = Vector2(0.606268, 0.606268)
+texture = ExtResource("2_byqlo")
+
+[node name="Boat" type="Node2D" parent="."]
+position = Vector2(-394, 214)
+script = SubResource("GDScript_byqlo")
+
+[node name="Sprite2D" type="Sprite2D" parent="Boat"]
+z_index = 6
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_fj23u")
+
+[node name="player" type="CharacterBody2D" parent="Boat"]
+z_index = 5
+position = Vector2(41, 0)
+script = ExtResource("3_byqlo")
+can_move = false
+
+[node name="sprite" type="AnimatedSprite2D" parent="Boat/player"]
+position = Vector2(0, -21)
+scale = Vector2(0.3, 0.3)
+sprite_frames = SubResource("SpriteFrames_4e2as")
+animation = &"walk"
+
+[node name="Camera2D" type="Camera2D" parent="Boat"]
+position = Vector2(394, -214)
+limit_left = 0
+limit_top = 0
+
+[node name="FireflyManager" type="Node2D" parent="."]
+position = Vector2(-579, -332)
+script = SubResource("GDScript_16fy0")
+
+[node name="MusicPlayer" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("16_6ulp1")
+volume_db = -4.952
+autoplay = true
+
+[node name="RiverSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("17_4s2mc")
+volume_db = -6.933
+autoplay = true
+
+[node name="BirdsSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("18_bk736")
+volume_db = 3.962
+autoplay = true

@@ -1,0 +1,123 @@
+[gd_scene load_steps=15 format=3 uid="uid://codg4kmh2u5ro"]
+
+[ext_resource type="Script" uid="uid://cw1gt5mqjl3ua" path="res://intro.gd" id="1_ayt76"]
+[ext_resource type="Texture2D" uid="uid://wrgko0e27klf" path="res://background/heart.png" id="2_7a8ye"]
+[ext_resource type="Texture2D" uid="uid://fdw1caix34gi" path="res://background/world.png" id="3_y72e6"]
+[ext_resource type="Texture2D" uid="uid://dfp05gl3ukx4n" path="res://background/world_crack.png" id="4_u2rf6"]
+[ext_resource type="Texture2D" uid="uid://bx7libsdiyah5" path="res://background/heart_crack.png" id="5_y6ycx"]
+[ext_resource type="Texture2D" uid="uid://bt0ng2bj2fwqa" path="res://background/space.png" id="6_u2rf6"]
+[ext_resource type="Texture2D" uid="uid://c488lp02nwo4d" path="res://background/black.png" id="7_7ufi4"]
+[ext_resource type="AudioStream" uid="uid://df7nlktk6gyur" path="res://audio/music/intro_music.wav" id="7_y6ycx"]
+[ext_resource type="AudioStream" uid="uid://mhl7yb41t4mb" path="res://audio/sfx/heartbeat.wav" id="8_dpxxx"]
+[ext_resource type="AudioStream" uid="uid://cgr57atkk47n8" path="res://audio/sfx/crack.mp3" id="9_dk2oa"]
+
+[sub_resource type="Animation" id="Animation_y72e6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_0a7ni"]
+resource_name = "fade_out"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.466667, 0.933333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), 0.0, Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_u2rf6"]
+_data = {
+&"RESET": SubResource("Animation_y72e6"),
+&"fade_out": SubResource("Animation_0a7ni")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y6ycx"]
+bg_color = Color(0, 0, 0, 0.729412)
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+
+[node name="Intro" type="CanvasLayer"]
+script = ExtResource("1_ayt76")
+images = Array[Texture2D]([ExtResource("2_7a8ye"), ExtResource("3_y72e6"), ExtResource("4_u2rf6"), ExtResource("5_y6ycx"), ExtResource("6_u2rf6"), ExtResource("7_7ufi4")])
+texts = Array[String](["Жизнь этого маленького удивительного мира поддерживает Сердце", "Всё живое и неживое здесь связано с Сердцем мира. Так продолжается уже много лет...", "Но ничто не вечно...", "В один момент Сердце истощилось и начало ломаться.", "И из своих последних сил, оно воплотило из себя стража. Ты - страж Сердца, тот, кому предстоит спасти этот мир. Найди 4 великих Хранителя, каждый из них даст тебе \"ключ\". После возвращайся к Сердцу и спаси его...", "Проводник проведет тебя к первому стражу. И помни: Истинный путь — у того, кто одинок в своём свете. Двое — лишь иллюзия, отражённая в водах забытья."])
+
+[node name="ColorRect" type="ColorRect" parent="."]
+modulate = Color(0.00784314, 0.00784314, 0.00784314, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ColorRect"]
+libraries = {
+&"": SubResource("AnimationLibrary_u2rf6")
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_7a8ye")
+stretch_mode = 6
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(0, 150)
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_y6ycx")
+
+[node name="Label" type="Label" parent="Panel"]
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 21.0
+offset_top = -130.0
+offset_right = -21.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 25
+autowrap_mode = 2
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="MusicPlayer" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_y6ycx")
+autoplay = true
+
+[node name="Heart" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("8_dpxxx")
+volume_db = 24.0
+autoplay = true
+
+[node name="Crack" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("9_dk2oa")
+volume_db = 6.934
